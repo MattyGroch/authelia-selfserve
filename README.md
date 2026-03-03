@@ -2,6 +2,14 @@
 
 A lightweight web app that lets users self-register for Authelia accounts. Registration requests are held for admin approval — the admin is notified by email and can approve or deny from either the email itself or a built-in dashboard.
 
+## Screenshots
+
+### Registration Page
+![Registration Page](docs/screenshot-register.png)
+
+### Admin Dashboard
+![Admin Dashboard](docs/screenshot-admin.png)
+
 ## How it works
 
 1. A visitor fills out the registration form at `/register`.
