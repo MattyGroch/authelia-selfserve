@@ -12,7 +12,7 @@ A lightweight web app that lets users self-register for Authelia accounts. Regis
 
 ## How it works
 
-1. A visitor fills out the registration form at `/register`.
+1. A visitor fills out the registration form at the root URL (`/` or `/register`).
 2. The password is immediately hashed with argon2id (matching Authelia's default) and stored in a local SQLite database as a **pending** request.
 3. The admin receives an email with the request details and one-click **Approve** / **Deny** links.
 4. On approval the user is written into Authelia's `users_database.yml` and receives a welcome email.
