@@ -3,8 +3,6 @@ services:
     build: .
     container_name: authelia-selfserve
     restart: unless-stopped
-    ports:
-      - "8085:8000"
     env_file: .env
     volumes:
       # Mount the same volume / bind-mount that Authelia uses for its user database.
@@ -12,6 +10,12 @@ services:
       - authelia_config:/data
     networks:
       - authelia
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.authelia-selfserve.rule=Host(`register.example.com`)"
+      - "traefik.http.routers.authelia-selfserve.entrypoints=websecure"
+      - "traefik.http.routers.authelia-selfserve.tls.certresolver=letsencrypt"
+      - "traefik.http.services.authelia-selfserve.loadbalancer.server.port=8000"
 
 volumes:
   authelia_config:

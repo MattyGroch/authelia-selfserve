@@ -37,7 +37,7 @@ Make sure the volume and network names in `docker-compose.yml` match your existi
 docker compose up -d --build
 ```
 
-The app will be available at `http://localhost:8085`.
+The app will be available at `https://register.example.com` (or whichever domain you configured in the Traefik labels).
 
 ### 3. Run locally (development)
 
@@ -79,6 +79,22 @@ volumes:
 ```
 
 After a user is approved, Authelia will pick up the change the next time it reads the file (which happens on each authentication attempt for the file backend).
+
+### Traefik reverse proxy
+
+The included `docker-compose.yml` is pre-configured with Traefik labels to serve the app at `register.example.com`. To adapt it to your setup:
+
+1. **Replace the domain** -- change `register.example.com` in the `Host()` rule to your actual subdomain.
+2. **Match your cert resolver** -- update `certresolver=letsencrypt` if your Traefik config uses a different resolver name (e.g. `myresolver`, `le`).
+3. **Set `APP_URL`** -- make sure `APP_URL` in your `.env` matches the public URL (e.g. `https://register.yourdomain.com`) so that email approve/deny links point to the right place.
+4. **Do NOT apply Authelia middleware** -- this service must remain publicly accessible so unauthenticated users can register. Do not add an `authelia@docker` middleware label.
+
+If you are not using Traefik, remove the `labels` block and add a `ports` mapping instead:
+
+```yaml
+ports:
+  - "8085:8000"
+```
 
 ## Security notes
 
