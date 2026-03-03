@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Authelia Self-Service{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 800: '#1e40af' }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="min-h-screen bg-gray-50 text-gray-800 antialiased">
+  <header class="bg-white border-b border-gray-200">
+    <div class="max-w-4xl mx-auto flex items-center justify-between px-6 py-4">
+      <a href="/" class="text-xl font-bold text-brand-700 hover:text-brand-800 transition">Authelia Self-Service</a>
+      {% block header_right %}{% endblock %}
+    </div>
+  </header>
+  <main class="max-w-4xl mx-auto px-6 py-10">
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="text-center text-sm text-gray-400 py-8">&copy; {{ year }} Authelia Self-Service Registration</footer>
+</body>
+</html>

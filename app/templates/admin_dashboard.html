@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard &mdash; Authelia Self-Service{% endblock %}
+
+{% block header_right %}
+<a href="/admin/logout" class="text-sm text-gray-500 hover:text-red-600 transition">Log out</a>
+{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-8">
+  <h1 class="text-2xl font-bold">Registration Requests</h1>
+  <span class="text-sm text-gray-400">{{ pending_count }} pending</span>
+</div>
+
+{% if flash %}
+<div class="bg-blue-50 border border-blue-200 text-blue-700 rounded-lg px-4 py-3 mb-6 text-sm">{{ flash }}</div>
+{% endif %}
+
+{% if not requests %}
+<p class="text-gray-400 italic">No registration requests yet.</p>
+{% else %}
+<div class="overflow-x-auto">
+  <table class="w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+    <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
+      <tr>
+        <th class="px-4 py-3 text-left">Username</th>
+        <th class="px-4 py-3 text-left">Display Name</th>
+        <th class="px-4 py-3 text-left">Email</th>
+        <th class="px-4 py-3 text-left">Status</th>
+        <th class="px-4 py-3 text-left">Submitted</th>
+        <th class="px-4 py-3 text-center">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-100">
+      {% for req in requests %}
+      <tr class="hover:bg-gray-50 transition">
+        <td class="px-4 py-3 font-mono">{{ req.username }}</td>
+        <td class="px-4 py-3">{{ req.display_name }}</td>
+        <td class="px-4 py-3">{{ req.email }}</td>
+        <td class="px-4 py-3">
+          {% if req.status.value == 'pending' %}
+          <span class="inline-block px-2 py-0.5 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">Pending</span>
+          {% elif req.status.value == 'approved' %}
+          <span class="inline-block px-2 py-0.5 bg-green-100 text-green-800 rounded-full text-xs font-medium">Approved</span>
+          {% else %}
+          <span class="inline-block px-2 py-0.5 bg-red-100 text-red-800 rounded-full text-xs font-medium">Denied</span>
+          {% endif %}
+        </td>
+        <td class="px-4 py-3 text-gray-500">{{ req.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+        <td class="px-4 py-3 text-center whitespace-nowrap">
+          {% if req.status.value == 'pending' %}
+          <form method="post" action="/admin/approve/{{ req.id }}" class="inline">
+            <button type="submit" class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-xs rounded-md transition mr-1">Approve</button>
+          </form>
+          <form method="post" action="/admin/deny/{{ req.id }}" class="inline">
+            <button type="submit" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-xs rounded-md transition">Deny</button>
+          </form>
+          {% elif req.resolved_at %}
+          <span class="text-gray-400 text-xs">{{ req.resolved_at.strftime('%Y-%m-%d %H:%M') }}</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+{% endblock %}
